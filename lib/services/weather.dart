@@ -51,7 +51,7 @@ class WeatherModel {
         'http://api.weatherapi.com/v1/current.json?key=$apiKey&q=$cityName&aqi=no&current_fields=temp_c,condition';
     Networking networking = Networking(url);
     var weatherData = await networking.getData();
-    print(weatherData);
+
     return weatherData;
   }
 

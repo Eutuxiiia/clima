@@ -140,61 +140,68 @@ class _LocationScreenState extends State<LocationScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Container(
-        padding: const EdgeInsets.only(left: 25.0, top: 15, right: 25.0),
-        constraints: const BoxConstraints.expand(),
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                "Current Location:",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isTablet = constraints.maxWidth > 600;
+          return Container(
+            padding: const EdgeInsets.only(left: 25.0, top: 15, right: 25.0),
+            constraints: const BoxConstraints.expand(),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    "Current Location:",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  CityCard(
+                      cityName: name, temperature: temp, condition: condition),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Cities:",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: cityTemperatures.length + (_hasMore ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index == cityTemperatures.length) {
+                          return const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          );
+                        }
+                        String city = cities[index];
+                        double? temp = cityTemperatures[city];
+                        String? condition = cityConditions[city];
+                        if (temp != null && condition != null) {
+                          return CityCard(
+                            cityName: city,
+                            temperature: temp,
+                            condition: condition,
+                          );
+                        } else {
+                          return const CityCard.loading(
+                            cityName: 'Loading...',
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 5),
-              CityCard(cityName: name, temperature: temp, condition: condition),
-              const SizedBox(height: 20),
-              const Text(
-                "Cities:",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 5),
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: cityTemperatures.length + (_hasMore ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index == cityTemperatures.length) {
-                      return const Center(
-                          child: CircularProgressIndicator(strokeWidth: 2));
-                    }
-                    String city = cities[index];
-                    double? temp = cityTemperatures[city];
-                    String? condition = cityConditions[city];
-                    if (temp != null && condition != null) {
-                      return CityCard(
-                        cityName: city,
-                        temperature: temp,
-                        condition: condition,
-                      );
-                    } else {
-                      return const CityCard.loading(
-                        cityName: 'Loading...',
-                      );
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

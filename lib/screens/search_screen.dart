@@ -50,44 +50,61 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Container(
-        constraints: const BoxConstraints.expand(),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    if (RegExp(r'\d').hasMatch(value)) {
-                      return 'Value should not contain numbers';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) {
-                    text = value;
-                  },
-                ),
-              ),
-              isLoading
-                  ? const CircularProgressIndicator()
-                  : TextButton(
-                      onPressed: confirmCity,
-                      child: const Text(
-                        'Get Weather',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isTablet = constraints.maxWidth > 600;
+          return Container(
+            constraints: const BoxConstraints.expand(),
+            padding: EdgeInsets.symmetric(
+              horizontal: isTablet ? 50.0 : 20.0,
+              vertical: 20.0,
+            ),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(20.0),
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        if (RegExp(r'\d').hasMatch(value)) {
+                          return 'Value should not contain numbers';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        text = value;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Enter city name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
                     ),
-            ],
-          ),
-        ),
+                  ),
+                  const SizedBox(height: 20),
+                  isLoading
+                      ? const CircularProgressIndicator()
+                      : TextButton(
+                          onPressed: confirmCity,
+                          child: const Text(
+                            'Get Weather',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

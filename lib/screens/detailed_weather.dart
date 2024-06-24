@@ -52,34 +52,45 @@ class _DetailedWeatherScreenState extends State<DetailedWeatherScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 25, top: 15, right: 25),
-        child: forecastData.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  DayForecast(
-                    date: forecastData[0]['date'],
-                    hourlyData: forecastData[0]['hour'],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isTablet = constraints.maxWidth > 600;
+
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isTablet ? 50.0 : 25.0,
+              vertical: 15.0,
+            ),
+            child: forecastData.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        DayForecast(
+                          date: forecastData[0]['date'],
+                          hourlyData: forecastData[0]['hour'],
+                        ),
+                        const Divider(
+                          color: Colors.black,
+                          thickness: 1,
+                        ),
+                        DayForecast(
+                          date: forecastData[1]['date'],
+                          hourlyData: forecastData[1]['hour'],
+                        ),
+                        const Divider(
+                          color: Colors.black,
+                          thickness: 1,
+                        ),
+                        DayForecast(
+                          date: forecastData[2]['date'],
+                          hourlyData: forecastData[2]['hour'],
+                        ),
+                      ],
+                    ),
                   ),
-                  const Divider(
-                    color: Colors.black,
-                    thickness: 1,
-                  ),
-                  DayForecast(
-                    date: forecastData[1]['date'],
-                    hourlyData: forecastData[1]['hour'],
-                  ),
-                  const Divider(
-                    color: Colors.black,
-                    thickness: 1,
-                  ),
-                  DayForecast(
-                    date: forecastData[2]['date'],
-                    hourlyData: forecastData[2]['hour'],
-                  ),
-                ],
-              ),
+          );
+        },
       ),
     );
   }

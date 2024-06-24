@@ -34,44 +34,55 @@ class CityCard extends StatelessWidget {
           ),
         );
       },
-      child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 5.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        elevation: 4,
-        child: ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-          title: Text(
-            cityName,
-            style: const TextStyle(
-              fontSize: 20.0,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isTablet = constraints.maxWidth > 600;
+          double fontSize = isTablet ? 24.0 : 20.0;
+          double iconSize = isTablet ? 50.0 : 40.0;
+          double padding = isTablet ? 20.0 : 10.0;
+
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 5.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${temperature.toInt()}°C',
-                style: const TextStyle(
-                  fontSize: 20.0,
+            elevation: 4,
+            child: ListTile(
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: padding,
+                vertical: padding / 2,
+              ),
+              title: Text(
+                cityName,
+                style: TextStyle(
+                  fontSize: fontSize,
                 ),
               ),
-              const SizedBox(width: 10.0),
-              SizedBox(
-                width: condition == '' ? 15 : 40,
-                height: condition == '' ? 15 : 40,
-                child: condition == ''
-                    ? const CircularProgressIndicator(strokeWidth: 2)
-                    : Lottie.asset(
-                        weather.getWeatherDescriptionIcon(condition),
-                        fit: BoxFit.fill,
-                      ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${temperature.toInt()}°C',
+                    style: TextStyle(
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  const SizedBox(width: 10.0),
+                  SizedBox(
+                    width: condition == '' ? iconSize / 2 : iconSize,
+                    height: condition == '' ? iconSize / 2 : iconSize,
+                    child: condition == ''
+                        ? const CircularProgressIndicator(strokeWidth: 2)
+                        : Lottie.asset(
+                            weather.getWeatherDescriptionIcon(condition),
+                            fit: BoxFit.fill,
+                          ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

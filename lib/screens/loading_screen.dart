@@ -20,26 +20,39 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void getLocationData() async {
-    var weatherData =
-        await WeatherModel.defaultConstructor().getLocationWeather();
+    try {
+      var weatherData =
+          await WeatherModel.defaultConstructor().getLocationWeather();
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => LocationScreen(
-          weatherData: weatherData,
-        ),
-      ),
-    );
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LocationScreen(
+              weatherData: weatherData,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error fetching location data: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    var screenSize = MediaQuery.of(context).size;
+    var orientation = MediaQuery.of(context).orientation;
+
+    double spinnerSize = orientation == Orientation.portrait
+        ? screenSize.width * 0.1
+        : screenSize.height * 0.1;
+
+    return Scaffold(
       body: Center(
         child: SpinKitCircle(
           color: Colors.black,
-          size: 50.0,
+          size: spinnerSize,
         ),
       ),
     );
